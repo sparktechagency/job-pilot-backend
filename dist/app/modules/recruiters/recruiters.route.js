@@ -1,0 +1,20 @@
+"use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.recruiterRouter = void 0;
+const user_constant_1 = require("./../user/user.constant");
+const express_1 = __importDefault(require("express"));
+const auth_1 = __importDefault(require("../../middlewares/auth"));
+const recruiters_controller_1 = require("./recruiters.controller");
+const fileUploadHandler_1 = __importDefault(require("../../middlewares/fileUploadHandler"));
+const UPLOADS_FOLDER = 'uploads/recruiters';
+const upload = (0, fileUploadHandler_1.default)(UPLOADS_FOLDER);
+const router = express_1.default.Router();
+router.post('/create', upload.single('imageUrl'), (0, auth_1.default)(user_constant_1.USER_ROLE.admin, user_constant_1.USER_ROLE.superAdmin), recruiters_controller_1.recruitersController.createRecruiters);
+router.patch('/update/:RId', upload.single('imageUrl'), (0, auth_1.default)(user_constant_1.USER_ROLE.admin, user_constant_1.USER_ROLE.superAdmin), recruiters_controller_1.recruitersController.updateRecruiter);
+router.get('/get-all', (0, auth_1.default)(user_constant_1.USER_ROLE.admin, user_constant_1.USER_ROLE.superAdmin, user_constant_1.USER_ROLE.analyst, user_constant_1.USER_ROLE.user), recruiters_controller_1.recruitersController.readAllRecruiter);
+router.get('/get-single/:RId', (0, auth_1.default)(user_constant_1.USER_ROLE.admin, user_constant_1.USER_ROLE.superAdmin, user_constant_1.USER_ROLE.analyst, user_constant_1.USER_ROLE.user), recruiters_controller_1.recruitersController.readSingleRecruiter);
+router.delete('/delete/:RId', (0, auth_1.default)(user_constant_1.USER_ROLE.admin, user_constant_1.USER_ROLE.superAdmin), recruiters_controller_1.recruitersController.deleteRecruiter);
+exports.recruiterRouter = router;
